@@ -21,11 +21,9 @@ package org.knowhowlab.configvalidator.service.internal.validators;
  * @author dpishchukhin
  */
 public enum Priority {
-    TOP,
     HIGHEST,
     HIGH,
-    MIDDLE,
+    MEDIUM,
     LOW,
-    LOWEST,
-    BOTTOM
+    LOWEST
 }

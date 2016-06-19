@@ -28,7 +28,4 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface LdapFilterValidation {
-    boolean supportNonstandardDefinitions() default false;
-
-    boolean supportSeconds() default false;
 }

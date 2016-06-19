@@ -18,21 +18,21 @@
 package org.knowhowlab.configvalidator.service.internal.validators;
 
 import org.knowhowlab.configvalidator.api.InvalidConfigurationException;
-import org.knowhowlab.configvalidator.api.annotations.NullValidation;
+import org.knowhowlab.configvalidator.api.annotations.StringEmptyValidation;
 
 /**
  * @author dpishchukhin
  */
-public class NullValueValidator implements InternalConfigurationValidator<Object, NullValidation> {
+public class EmptyStringValidator implements InternalConfigurationValidator<String, StringEmptyValidation> {
     @Override
     public Priority getPriorityOrder() {
-        return Priority.HIGHEST;
+        return Priority.HIGH;
     }
 
     @Override
-    public void validate(String name, Object object, NullValidation annotation) throws InvalidConfigurationException {
-        if (object == null) {
-            throw new InvalidConfigurationException(name, "is null");
+    public void validate(String name, String object, StringEmptyValidation annotation) throws InvalidConfigurationException {
+        if (object.isEmpty()) {
+            throw new InvalidConfigurationException(name, "is empty");
         }
     }
 }

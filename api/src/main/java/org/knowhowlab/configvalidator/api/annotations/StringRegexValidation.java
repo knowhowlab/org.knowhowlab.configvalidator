@@ -28,5 +28,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface StringRegexValidation {
-    String matches() default ".*";
+    String value() default ".*";
 }

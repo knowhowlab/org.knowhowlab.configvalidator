@@ -15,24 +15,20 @@
  *
  */
 
-package org.knowhowlab.configvalidator.service.internal.validators;
+package org.knowhowlab.configvalidator.api.annotations;
 
-import org.knowhowlab.configvalidator.api.InvalidConfigurationException;
-import org.knowhowlab.configvalidator.api.annotations.NullValidation;
+import org.knowhowlab.configvalidator.api.ConfigurationValidator;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author dpishchukhin
  */
-public class NullValueValidator implements InternalConfigurationValidator<Object, NullValidation> {
-    @Override
-    public Priority getPriorityOrder() {
-        return Priority.HIGHEST;
-    }
-
-    @Override
-    public void validate(String name, Object object, NullValidation annotation) throws InvalidConfigurationException {
-        if (object == null) {
-            throw new InvalidConfigurationException(name, "is null");
-        }
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.METHOD})
+public @interface CustomValidators {
+    Class<? extends ConfigurationValidator>[] value();
 }

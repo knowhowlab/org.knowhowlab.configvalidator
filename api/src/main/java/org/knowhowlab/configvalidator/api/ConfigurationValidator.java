@@ -21,5 +21,7 @@ package org.knowhowlab.configvalidator.api;
  * @author dpishchukhin
  */
 public interface ConfigurationValidator<T> {
+    Class<T> getSupportedClass();
+
     void validate(String name, T object) throws InvalidConfigurationException;
 }

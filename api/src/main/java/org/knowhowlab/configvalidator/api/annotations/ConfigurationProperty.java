@@ -17,8 +17,6 @@
 
 package org.knowhowlab.configvalidator.api.annotations;
 
-import org.knowhowlab.configvalidator.api.ConfigurationValidator;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -31,6 +29,4 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface ConfigurationProperty {
     String name();
-
-    Class<? extends ConfigurationValidator>[] validators();
 }
