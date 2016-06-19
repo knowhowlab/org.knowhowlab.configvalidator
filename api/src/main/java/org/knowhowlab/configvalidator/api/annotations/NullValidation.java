@@ -26,7 +26,6 @@ import java.lang.annotation.Target;
  * @author dpishchukhin
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.TYPE})
 public @interface NullValidation {
-    boolean nullable() default false;
 }

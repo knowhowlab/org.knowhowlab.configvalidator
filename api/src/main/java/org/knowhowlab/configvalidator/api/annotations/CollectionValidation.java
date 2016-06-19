@@ -15,19 +15,18 @@
  *
  */
 
-package org.knowhowlab.configvalidator.api;
+package org.knowhowlab.configvalidator.api.annotations;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author dpishchukhin
  */
-public class InvalidConfigurationException extends IllegalArgumentException {
-    private static final String UNKNOWN_NAME = "unknown";
-
-    public InvalidConfigurationException(String name, String validationError) {
-        super(createMessage(name, validationError));
-    }
-
-    private static String createMessage(String name, String validationError) {
-        return (name == null ? UNKNOWN_NAME : name) + " " + validationError;
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface CollectionValidation {
+    Range[] size();
 }

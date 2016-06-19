@@ -15,19 +15,17 @@
  *
  */
 
-package org.knowhowlab.configvalidator.api;
+package org.knowhowlab.configvalidator.service.internal.validators;
 
 /**
  * @author dpishchukhin
  */
-public class InvalidConfigurationException extends IllegalArgumentException {
-    private static final String UNKNOWN_NAME = "unknown";
-
-    public InvalidConfigurationException(String name, String validationError) {
-        super(createMessage(name, validationError));
-    }
-
-    private static String createMessage(String name, String validationError) {
-        return (name == null ? UNKNOWN_NAME : name) + " " + validationError;
-    }
+public enum Priority {
+    TOP,
+    HIGHEST,
+    HIGH,
+    MIDDLE,
+    LOW,
+    LOWEST,
+    BOTTOM
 }

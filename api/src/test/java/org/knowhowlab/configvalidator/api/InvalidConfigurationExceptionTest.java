@@ -17,17 +17,24 @@
 
 package org.knowhowlab.configvalidator.api;
 
+import org.junit.Assert;
+import org.junit.Test;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+
 /**
  * @author dpishchukhin
  */
-public class InvalidConfigurationException extends IllegalArgumentException {
-    private static final String UNKNOWN_NAME = "unknown";
-
-    public InvalidConfigurationException(String name, String validationError) {
-        super(createMessage(name, validationError));
+public class InvalidConfigurationExceptionTest {
+    @Test
+    public void one_property() throws Exception {
+        Assert.assertThat(new InvalidConfigurationException("param.1", "is invalid").getMessage(),
+                equalTo("param.1 is invalid"));
     }
 
-    private static String createMessage(String name, String validationError) {
-        return (name == null ? UNKNOWN_NAME : name) + " " + validationError;
+    @Test
+    public void property_name_null() throws Exception {
+        Assert.assertThat(new InvalidConfigurationException(null, "is invalid").getMessage(),
+                equalTo("unknown is invalid"));
     }
 }

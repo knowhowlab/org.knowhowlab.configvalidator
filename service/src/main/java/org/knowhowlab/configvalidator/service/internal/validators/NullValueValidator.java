@@ -15,19 +15,24 @@
  *
  */
 
-package org.knowhowlab.configvalidator.api;
+package org.knowhowlab.configvalidator.service.internal.validators;
+
+import org.knowhowlab.configvalidator.api.InvalidConfigurationException;
+import org.knowhowlab.configvalidator.api.annotations.NullValidation;
 
 /**
  * @author dpishchukhin
  */
-public class InvalidConfigurationException extends IllegalArgumentException {
-    private static final String UNKNOWN_NAME = "unknown";
-
-    public InvalidConfigurationException(String name, String validationError) {
-        super(createMessage(name, validationError));
+public class NullValueValidator implements InternalConfigurationValidator<Object, NullValidation> {
+    @Override
+    public Priority getPriorityOrder() {
+        return Priority.TOP;
     }
 
-    private static String createMessage(String name, String validationError) {
-        return (name == null ? UNKNOWN_NAME : name) + " " + validationError;
+    @Override
+    public void validate(String name, Object object, NullValidation annotation) throws InvalidConfigurationException {
+        if (object == null) {
+            throw new InvalidConfigurationException(name, "is null");
+        }
     }
 }

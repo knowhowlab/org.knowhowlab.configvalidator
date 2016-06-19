@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~  Copyright (c) 2009-2016 Dmytro Pishchukhin (http://knowhowlab.org)
-  ~  
+  ~
   ~  Licensed under the Apache License, Version 2.0 (the "License");
   ~  you may not use this file except in compliance with the License.
   ~  You may obtain a copy of the License at
-  ~  
+  ~
   ~           http://www.apache.org/licenses/LICENSE-2.0
-  ~  
+  ~
   ~  Unless required by applicable law or agreed to in writing, software
   ~  distributed under the License is distributed on an "AS IS" BASIS,
   ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,14 +28,23 @@
         <relativePath>../parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>org.knowhowlab.configvalidator.api</artifactId>
+    <artifactId>org.knowhowlab.configvalidator.service</artifactId>
     <packaging>bundle</packaging>
-    <name>Configuration Validator - API</name>
+    <name>Configuration Validator - Service</name>
 
     <dependencies>
         <dependency>
             <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.annotation</artifactId>
+            <artifactId>org.osgi.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.knowhowlab.configvalidator</groupId>
+            <artifactId>org.knowhowlab.configvalidator.api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
 
         <dependency>
@@ -54,4 +63,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
 </project>

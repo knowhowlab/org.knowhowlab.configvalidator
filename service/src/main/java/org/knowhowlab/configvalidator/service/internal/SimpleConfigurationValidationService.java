@@ -15,19 +15,17 @@
  *
  */
 
-package org.knowhowlab.configvalidator.api;
+package org.knowhowlab.configvalidator.service.internal;
+
+import org.knowhowlab.configvalidator.api.InvalidConfigurationException;
+import org.knowhowlab.configvalidator.api.service.ConfigurationValidationService;
 
 /**
  * @author dpishchukhin
  */
-public class InvalidConfigurationException extends IllegalArgumentException {
-    private static final String UNKNOWN_NAME = "unknown";
-
-    public InvalidConfigurationException(String name, String validationError) {
-        super(createMessage(name, validationError));
-    }
-
-    private static String createMessage(String name, String validationError) {
-        return (name == null ? UNKNOWN_NAME : name) + " " + validationError;
+public class SimpleConfigurationValidationService implements ConfigurationValidationService {
+    @Override
+    public <T> void validate(Class<T> aCLass, T config) throws InvalidConfigurationException {
+        // todo
     }
 }
