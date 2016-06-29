@@ -18,24 +18,25 @@
 package org.knowhowlab.configvalidator.service.internal.validators;
 
 import org.knowhowlab.configvalidator.api.InvalidConfigurationException;
-import org.knowhowlab.configvalidator.api.annotations.RegexValidation;
-
-import static java.lang.String.format;
+import org.knowhowlab.configvalidator.api.annotations.LdapFilterValidation;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.InvalidSyntaxException;
 
 /**
  * @author dpishchukhin
  */
-public class StringRegexValidator implements InternalConfigurationValidator<String, RegexValidation> {
+public class LdapFilterValidator implements InternalConfigurationValidator<String, LdapFilterValidation> {
     @Override
     public Priority getPriorityOrder() {
         return Priority.MEDIUM;
     }
 
     @Override
-    public void validate(String name, String object, RegexValidation annotation) throws InvalidConfigurationException {
-        //noinspection ConstantConditions
-        if (annotation != null && annotation.value() != null && !object.matches(annotation.value())) {
-            throw new InvalidConfigurationException(name, format("does not match regex %s", annotation.value()));
+    public void validate(String name, String object, LdapFilterValidation annotation) throws InvalidConfigurationException {
+        try {
+            FrameworkUtil.createFilter(object);
+        } catch (InvalidSyntaxException e) {
+            throw new InvalidConfigurationException(name, "is invalid LDAP filter");
         }
     }
 }

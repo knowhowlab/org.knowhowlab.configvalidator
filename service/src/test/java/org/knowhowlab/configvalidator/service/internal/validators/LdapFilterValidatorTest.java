@@ -22,57 +22,41 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.knowhowlab.configvalidator.api.InvalidConfigurationException;
-import org.knowhowlab.configvalidator.api.annotations.RegexValidation;
+import org.knowhowlab.configvalidator.api.annotations.LdapFilterValidation;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * @author dpishchukhin
  */
-public class StringRegexValidatorTest {
-    private StringRegexValidator validator;
+public class LdapFilterValidatorTest {
+    private LdapFilterValidator validator;
 
     @Before
     public void setUp() throws Exception {
-        validator = new StringRegexValidator();
+        validator = new LdapFilterValidator();
     }
 
     @Test
-    public void value_empty_annotation() throws Exception {
+    public void valid_filter() throws Exception {
         try {
-            validator.validate("param.1", "value", null);
+            validator.validate("param.1", "(a=b)", mock(LdapFilterValidation.class));
         } catch (InvalidConfigurationException e) {
             Assert.fail("Exception should not be thrown");
         }
     }
 
     @Test
-    public void value_empty_regex() throws Exception {
-        try {
-            validator.validate("param.1", "value", mock(RegexValidation.class));
-        } catch (InvalidConfigurationException e) {
-            Assert.fail("Exception should not be thrown");
-        }
-    }
-
-    @Test
-    public void value_matches() throws Exception {
-        RegexValidation mock = mock(RegexValidation.class);
-        when(mock.value()).thenReturn(".*");
-        try {
-            validator.validate("param.1", "value", mock);
-        } catch (InvalidConfigurationException e) {
-            Assert.fail("Exception should not be thrown");
-        }
-    }
-
-    @Test
-    public void value_does_not_match() throws Exception {
-        RegexValidation mock = mock(RegexValidation.class);
-        when(mock.value()).thenReturn("[0..9]*");
+    public void invalid_filter() throws Exception {
         Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
-                .isThrownBy(() -> validator.validate("param.1", "abc", mock))
-                .withMessage("param.1 does not match regex [0..9]*");
+                .isThrownBy(() -> validator.validate("param.1", "aa=bb", mock(LdapFilterValidation.class)))
+                .withMessage("param.1 is invalid LDAP filter");
+    }
+
+    @Test
+    public void invalid_filter_and_null_annotation() throws Exception {
+        Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
+                .isThrownBy(() -> validator.validate("param.1", "aa=bb", null))
+                .withMessage("param.1 is invalid LDAP filter");
     }
 }
