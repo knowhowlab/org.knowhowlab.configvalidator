@@ -24,7 +24,7 @@ import org.knowhowlab.configvalidator.service.internal.utils.DoubleRange;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -42,12 +42,12 @@ public class CollectionValidator implements InternalConfigurationValidator<Colle
     public void validate(String name, Collection collection, CollectionValidation annotation) throws InvalidConfigurationException {
         //noinspection ConstantConditions
         if (annotation != null && annotation.size() != null) {
-            Set<DoubleRange> ranges = Arrays.stream(annotation.size())
+            List<DoubleRange> ranges = Arrays.stream(annotation.size())
                     .map(Range::value)
                     .filter(v -> v != null)
                     .map(DoubleRange::valueOf)
                     .filter(DoubleRange::isValid)
-                    .collect(Collectors.toSet());
+                    .collect(Collectors.toList());
             if (ranges.isEmpty()) {
                 return;
             }

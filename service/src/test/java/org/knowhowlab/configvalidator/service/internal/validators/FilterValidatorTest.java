@@ -29,12 +29,12 @@ import static org.mockito.Mockito.mock;
 /**
  * @author dpishchukhin
  */
-public class LdapFilterValidatorTest {
-    private LdapFilterValidator validator;
+public class FilterValidatorTest {
+    private FilterValidator validator;
 
     @Before
     public void setUp() throws Exception {
-        validator = new LdapFilterValidator();
+        validator = new FilterValidator();
     }
 
     @Test
@@ -50,13 +50,13 @@ public class LdapFilterValidatorTest {
     public void invalid_filter() throws Exception {
         Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
                 .isThrownBy(() -> validator.validate("param.1", "aa=bb", mock(LdapFilterValidation.class)))
-                .withMessage("param.1 is invalid LDAP filter");
+                .withMessage("param.1 is invalid filter");
     }
 
     @Test
     public void invalid_filter_and_null_annotation() throws Exception {
         Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
                 .isThrownBy(() -> validator.validate("param.1", "aa=bb", null))
-                .withMessage("param.1 is invalid LDAP filter");
+                .withMessage("param.1 is invalid filter");
     }
 }

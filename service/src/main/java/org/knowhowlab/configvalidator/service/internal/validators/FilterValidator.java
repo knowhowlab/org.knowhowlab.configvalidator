@@ -25,7 +25,7 @@ import org.osgi.framework.InvalidSyntaxException;
 /**
  * @author dpishchukhin
  */
-public class LdapFilterValidator implements InternalConfigurationValidator<String, LdapFilterValidation> {
+public class FilterValidator implements InternalConfigurationValidator<String, LdapFilterValidation> {
     @Override
     public Priority getPriorityOrder() {
         return Priority.MEDIUM;
@@ -36,7 +36,7 @@ public class LdapFilterValidator implements InternalConfigurationValidator<Strin
         try {
             FrameworkUtil.createFilter(object);
         } catch (InvalidSyntaxException e) {
-            throw new InvalidConfigurationException(name, "is invalid LDAP filter");
+            throw new InvalidConfigurationException(name, "is invalid filter");
         }
     }
 }
