@@ -34,6 +34,10 @@ import static org.mockito.Mockito.when;
 public class ValuesValidatorTest {
     private ValuesValidator validator;
 
+    private enum TestEnum {
+        OK, NOK, NOKNOK
+    }
+
     @Before
     public void setUp() throws Exception {
         validator = new ValuesValidator();
@@ -49,9 +53,27 @@ public class ValuesValidatorTest {
     }
 
     @Test
+    public void value_enum_empty_annotation() throws Exception {
+        try {
+            validator.validate("param.1", TestEnum.OK, null);
+        } catch (InvalidConfigurationException e) {
+            Assert.fail("Exception should not be thrown");
+        }
+    }
+
+    @Test
     public void values_empty_annotation() throws Exception {
         try {
             validator.validate("param.1", new String[]{"value"}, null);
+        } catch (InvalidConfigurationException e) {
+            Assert.fail("Exception should not be thrown");
+        }
+    }
+
+    @Test
+    public void values_enum_empty_annotation() throws Exception {
+        try {
+            validator.validate("param.1", new TestEnum[]{TestEnum.OK, TestEnum.NOK}, null);
         } catch (InvalidConfigurationException e) {
             Assert.fail("Exception should not be thrown");
         }
@@ -67,9 +89,27 @@ public class ValuesValidatorTest {
     }
 
     @Test
+    public void value_enum_empty_values() throws Exception {
+        try {
+            validator.validate("param.1", TestEnum.OK, mock(ValuesValidation.class));
+        } catch (InvalidConfigurationException e) {
+            Assert.fail("Exception should not be thrown");
+        }
+    }
+
+    @Test
     public void values_empty_values() throws Exception {
         try {
             validator.validate("param.1", new String[]{"value"}, mock(ValuesValidation.class));
+        } catch (InvalidConfigurationException e) {
+            Assert.fail("Exception should not be thrown");
+        }
+    }
+
+    @Test
+    public void values_enum_empty_values() throws Exception {
+        try {
+            validator.validate("param.1", new TestEnum[]{TestEnum.OK, TestEnum.NOK}, mock(ValuesValidation.class));
         } catch (InvalidConfigurationException e) {
             Assert.fail("Exception should not be thrown");
         }
@@ -88,12 +128,36 @@ public class ValuesValidatorTest {
     }
 
     @Test
+    public void value_enum_empty_value() throws Exception {
+        try {
+            ValuesValidation mock = mock(ValuesValidation.class);
+            Value valueMock = mock(Value.class);
+            when(mock.value()).thenReturn(new Value[]{valueMock});
+            validator.validate("param.1", TestEnum.OK, mock);
+        } catch (InvalidConfigurationException e) {
+            Assert.fail("Exception should not be thrown");
+        }
+    }
+
+    @Test
     public void values_empty_value() throws Exception {
         try {
             ValuesValidation mock = mock(ValuesValidation.class);
             Value valueMock = mock(Value.class);
             when(mock.value()).thenReturn(new Value[]{valueMock});
             validator.validate("param.1", new String[]{"value"}, mock);
+        } catch (InvalidConfigurationException e) {
+            Assert.fail("Exception should not be thrown");
+        }
+    }
+
+    @Test
+    public void values_enum_empty_value() throws Exception {
+        try {
+            ValuesValidation mock = mock(ValuesValidation.class);
+            Value valueMock = mock(Value.class);
+            when(mock.value()).thenReturn(new Value[]{valueMock});
+            validator.validate("param.1", new TestEnum[]{TestEnum.OK, TestEnum.NOK}, mock);
         } catch (InvalidConfigurationException e) {
             Assert.fail("Exception should not be thrown");
         }
@@ -109,6 +173,21 @@ public class ValuesValidatorTest {
             when(valueMock2.value()).thenReturn("b");
             when(mock.value()).thenReturn(new Value[]{valueMock1, valueMock2});
             validator.validate("param.1", "a", mock);
+        } catch (InvalidConfigurationException e) {
+            Assert.fail("Exception should not be thrown");
+        }
+    }
+
+    @Test
+    public void value_enum_contains() throws Exception {
+        try {
+            ValuesValidation mock = mock(ValuesValidation.class);
+            Value valueMock1 = mock(Value.class);
+            when(valueMock1.value()).thenReturn("OK");
+            Value valueMock2 = mock(Value.class);
+            when(valueMock2.value()).thenReturn("NOK");
+            when(mock.value()).thenReturn(new Value[]{valueMock1, valueMock2});
+            validator.validate("param.1", TestEnum.OK, mock);
         } catch (InvalidConfigurationException e) {
             Assert.fail("Exception should not be thrown");
         }
@@ -132,6 +211,23 @@ public class ValuesValidatorTest {
     }
 
     @Test
+    public void values_enum_contain() throws Exception {
+        try {
+            ValuesValidation mock = mock(ValuesValidation.class);
+            Value valueMock1 = mock(Value.class);
+            when(valueMock1.value()).thenReturn("OK");
+            Value valueMock2 = mock(Value.class);
+            when(valueMock2.value()).thenReturn("NOK");
+            Value valueMock3 = mock(Value.class);
+            when(valueMock3.value()).thenReturn("NOKNOK");
+            when(mock.value()).thenReturn(new Value[]{valueMock1, valueMock2, valueMock3});
+            validator.validate("param.1", new TestEnum[]{TestEnum.OK, TestEnum.NOK}, mock);
+        } catch (InvalidConfigurationException e) {
+            Assert.fail("Exception should not be thrown");
+        }
+    }
+
+    @Test
     public void value_does_not_contain() throws Exception {
         ValuesValidation mock = mock(ValuesValidation.class);
         Value valueMock1 = mock(Value.class);
@@ -146,6 +242,20 @@ public class ValuesValidatorTest {
     }
 
     @Test
+    public void value_enum_does_not_contain() throws Exception {
+        ValuesValidation mock = mock(ValuesValidation.class);
+        Value valueMock1 = mock(Value.class);
+        when(valueMock1.value()).thenReturn("OK");
+        Value valueMock2 = mock(Value.class);
+        when(valueMock2.value()).thenReturn("NOK");
+        when(mock.value()).thenReturn(new Value[]{valueMock1, valueMock2});
+
+        Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
+                .isThrownBy(() -> validator.validate("param.1", TestEnum.NOKNOK, mock))
+                .withMessage("param.1 contains value 'NOKNOK' out of range [OK, NOK]");
+    }
+
+    @Test
     public void values_do_not_contain() throws Exception {
         ValuesValidation mock = mock(ValuesValidation.class);
         Value valueMock1 = mock(Value.class);
@@ -157,5 +267,19 @@ public class ValuesValidatorTest {
         Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
                 .isThrownBy(() -> validator.validate("param.1", new String[]{"a", "c"}, mock))
                 .withMessage("param.1 contains values [c] out of range [a, b]");
+    }
+
+    @Test
+    public void values_enum_do_not_contain() throws Exception {
+        ValuesValidation mock = mock(ValuesValidation.class);
+        Value valueMock1 = mock(Value.class);
+        when(valueMock1.value()).thenReturn("OK");
+        Value valueMock2 = mock(Value.class);
+        when(valueMock2.value()).thenReturn("NOK");
+        when(mock.value()).thenReturn(new Value[]{valueMock1, valueMock2});
+
+        Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
+                .isThrownBy(() -> validator.validate("param.1", new TestEnum[]{TestEnum.OK, TestEnum.NOKNOK}, mock))
+                .withMessage("param.1 contains values [NOKNOK] out of range [OK, NOK]");
     }
 }

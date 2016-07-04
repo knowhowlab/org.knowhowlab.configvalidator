@@ -23,7 +23,6 @@ import org.knowhowlab.configvalidator.api.annotations.ValuesValidation;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -42,11 +41,11 @@ public class ValuesValidator implements InternalConfigurationValidator<Object, V
     public void validate(String name, Object object, ValuesValidation annotation) throws InvalidConfigurationException {
         //noinspection ConstantConditions
         if (annotation != null && annotation.value() != null) {
-            Set<String> values = Arrays.stream(annotation.value())
+            List<String> values = Arrays.stream(annotation.value())
                     .map(Value::value)
                     .filter(v -> v != null)
                     .map(String::valueOf)
-                    .collect(Collectors.toSet());
+                    .collect(Collectors.toList());
             if (values.isEmpty()) {
                 return;
             }
