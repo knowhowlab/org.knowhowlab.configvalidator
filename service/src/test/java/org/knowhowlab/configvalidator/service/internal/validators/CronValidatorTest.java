@@ -22,41 +22,50 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.knowhowlab.configvalidator.api.InvalidConfigurationException;
-import org.knowhowlab.configvalidator.api.annotations.FilterValidation;
+import org.knowhowlab.configvalidator.api.annotations.CronValidation;
 
 import static org.mockito.Mockito.mock;
 
 /**
  * @author dpishchukhin
  */
-public class FilterValidatorTest {
-    private FilterValidator validator;
+public class CronValidatorTest {
+    private CronValidator validator;
 
     @Before
     public void setUp() throws Exception {
-        validator = new FilterValidator();
+        validator = new CronValidator();
     }
 
     @Test
-    public void valid_filter() throws Exception {
+    public void valid_cron_nonstandard() throws Exception {
         try {
-            validator.validate("param.1", "(a=b)", mock(FilterValidation.class));
+            validator.validate("param.1", "@yearly", mock(CronValidation.class));
         } catch (InvalidConfigurationException e) {
             Assert.fail("Exception should not be thrown");
         }
     }
 
     @Test
-    public void invalid_filter() throws Exception {
-        Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
-                .isThrownBy(() -> validator.validate("param.1", "aa=bb", mock(FilterValidation.class)))
-                .withMessage("param.1 is invalid filter");
+    public void valid_cron() throws Exception {
+        try {
+            validator.validate("param.1", "0 0 12 ? * WED", mock(CronValidation.class));
+        } catch (InvalidConfigurationException e) {
+            Assert.fail("Exception should not be thrown");
+        }
     }
 
     @Test
-    public void invalid_filter_and_null_annotation() throws Exception {
+    public void invalid_cron() throws Exception {
         Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
-                .isThrownBy(() -> validator.validate("param.1", "aa=bb", null))
-                .withMessage("param.1 is invalid filter");
+                .isThrownBy(() -> validator.validate("param.1", "* * * 0/1 *", mock(CronValidation.class)))
+                .withMessage("param.1 is invalid cron expression");
+    }
+
+    @Test
+    public void invalid_cron_and_null_annotation() throws Exception {
+        Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
+                .isThrownBy(() -> validator.validate("param.1", "0-15 * * 0/16", null))
+                .withMessage("param.1 is invalid cron expression");
     }
 }

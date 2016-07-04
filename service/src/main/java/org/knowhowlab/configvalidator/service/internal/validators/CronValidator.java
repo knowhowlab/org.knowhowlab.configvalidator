@@ -18,25 +18,36 @@
 package org.knowhowlab.configvalidator.service.internal.validators;
 
 import org.knowhowlab.configvalidator.api.InvalidConfigurationException;
-import org.knowhowlab.configvalidator.api.annotations.FilterValidation;
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.framework.InvalidSyntaxException;
+import org.knowhowlab.configvalidator.api.annotations.CronValidation;
+import org.knowhowlab.configvalidator.service.internal.utils.CronExpression;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author dpishchukhin
  */
-public class FilterValidator implements InternalConfigurationValidator<String, FilterValidation> {
+public class CronValidator implements InternalConfigurationValidator<String, CronValidation> {
+    private static final List<String> RESERVED_FORMATS = Arrays.asList(
+            "@reboot",
+            "@yearly",
+            "@annually",
+            "@monthly",
+            "@weekly",
+            "@daily",
+            "@midnight",
+            "@hourly"
+    );
+
     @Override
     public Priority getPriorityOrder() {
         return Priority.MEDIUM;
     }
 
     @Override
-    public void validate(String name, String object, FilterValidation annotation) throws InvalidConfigurationException {
-        try {
-            FrameworkUtil.createFilter(object);
-        } catch (InvalidSyntaxException e) {
-            throw new InvalidConfigurationException(name, "is invalid filter");
+    public void validate(String name, String object, CronValidation annotation) throws InvalidConfigurationException {
+        if (!RESERVED_FORMATS.contains(object) && !CronExpression.isValid(object)) {
+            throw new InvalidConfigurationException(name, "is invalid cron expression");
         }
     }
 }
