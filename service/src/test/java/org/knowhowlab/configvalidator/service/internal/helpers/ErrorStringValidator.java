@@ -15,20 +15,27 @@
  *
  */
 
-package org.knowhowlab.configvalidator.api.annotations;
+package org.knowhowlab.configvalidator.service.internal.helpers;
 
 import org.knowhowlab.configvalidator.api.ConfigurationValidator;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.knowhowlab.configvalidator.api.InvalidConfigurationException;
 
 /**
  * @author dpishchukhin
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.METHOD})
-public @interface CustomValidators {
-    Class<? extends ConfigurationValidator>[] value();
+public class ErrorStringValidator implements ConfigurationValidator<String> {
+    private ErrorStringValidator() {
+    }
+
+    @Override
+    public Class<String> getSupportedClass() {
+        return String.class;
+    }
+
+    @Override
+    public void validate(String name, String object) throws InvalidConfigurationException {
+        if (object.startsWith("error")) {
+            throw new InvalidConfigurationException(name, "starts with error");
+        }
+    }
 }

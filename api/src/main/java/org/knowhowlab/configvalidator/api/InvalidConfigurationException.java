@@ -17,6 +17,10 @@
 
 package org.knowhowlab.configvalidator.api;
 
+import java.util.Collection;
+
+import static java.util.stream.Collectors.joining;
+
 /**
  * @author dpishchukhin
  */
@@ -25,6 +29,13 @@ public class InvalidConfigurationException extends IllegalArgumentException {
 
     public InvalidConfigurationException(String name, String validationError) {
         super(createMessage(name, validationError));
+    }
+
+    public InvalidConfigurationException(Collection<InvalidConfigurationException> errors) {
+        super(errors.stream()
+                .map(Exception::getMessage)
+                .collect(joining(", "))
+        );
     }
 
     private static String createMessage(String name, String validationError) {
