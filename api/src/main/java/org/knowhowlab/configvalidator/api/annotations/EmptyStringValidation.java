@@ -15,24 +15,17 @@
  *
  */
 
-package org.knowhowlab.configvalidator.service.internal.validators;
+package org.knowhowlab.configvalidator.api.annotations;
 
-import org.knowhowlab.configvalidator.api.InvalidConfigurationException;
-import org.knowhowlab.configvalidator.api.annotations.EmptyStringValidation;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author dpishchukhin
  */
-public class EmptyStringValidator implements InternalConfigurationValidator<String, EmptyStringValidation> {
-    @Override
-    public Priority getPriorityOrder() {
-        return Priority.HIGH;
-    }
-
-    @Override
-    public void validate(String name, String object, EmptyStringValidation annotation) throws InvalidConfigurationException {
-        if (object.isEmpty()) {
-            throw new InvalidConfigurationException(name, "is empty");
-        }
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface EmptyStringValidation {
 }

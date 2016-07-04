@@ -15,17 +15,22 @@
  *
  */
 
-package org.knowhowlab.configvalidator.api.annotations;
+package org.knowhowlab.configvalidator.service.internal.helpers;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.knowhowlab.configvalidator.api.annotations.ConfigurationProperty;
+import org.knowhowlab.configvalidator.api.annotations.NullValidation;
 
 /**
  * @author dpishchukhin
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface StringEmptyValidation {
+public interface MethodConfiguration1 {
+    String method1();
+
+    @ConfigurationProperty("prop.1")
+    String method2();
+
+    String method3();
+
+    @NullValidation
+    String method4();
 }

@@ -22,7 +22,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.knowhowlab.configvalidator.api.InvalidConfigurationException;
-import org.knowhowlab.configvalidator.api.annotations.StringEmptyValidation;
+import org.knowhowlab.configvalidator.api.annotations.EmptyStringValidation;
 
 import static org.mockito.Mockito.mock;
 
@@ -40,7 +40,7 @@ public class EmptyStringValidatorTest {
     @Test
     public void not_empty_value() throws Exception {
         try {
-            validator.validate("param.1", "value", mock(StringEmptyValidation.class));
+            validator.validate("param.1", "value", mock(EmptyStringValidation.class));
         } catch (InvalidConfigurationException e) {
             Assert.fail("Exception should not be thrown");
         }
@@ -49,7 +49,7 @@ public class EmptyStringValidatorTest {
     @Test
     public void empty_value() throws Exception {
         Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
-                .isThrownBy(() -> validator.validate("param.1", "", mock(StringEmptyValidation.class)))
+                .isThrownBy(() -> validator.validate("param.1", "", mock(EmptyStringValidation.class)))
                 .withMessage("param.1 is empty");
     }
 
