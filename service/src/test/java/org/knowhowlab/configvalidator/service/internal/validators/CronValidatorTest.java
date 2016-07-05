@@ -58,14 +58,14 @@ public class CronValidatorTest {
     @Test
     public void invalid_cron() throws Exception {
         Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
-                .isThrownBy(() -> validator.validate("param.1", "* * * 0/1 *", mock(CronValidation.class)))
-                .withMessage("param.1 is invalid cron expression");
+            .isThrownBy(() -> validator.validate("param.1", "* * * 0/1 *", mock(CronValidation.class)))
+            .withMessage("param.1 is invalid cron expression");
     }
 
     @Test
     public void invalid_cron_and_null_annotation() throws Exception {
         Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
-                .isThrownBy(() -> validator.validate("param.1", "0-15 * * 0/16", null))
-                .withMessage("param.1 is invalid cron expression");
+            .isThrownBy(() -> validator.validate("param.1", "0-15 * * 0/16", null))
+            .withMessage("param.1 is invalid cron expression");
     }
 }

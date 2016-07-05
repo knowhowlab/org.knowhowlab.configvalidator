@@ -29,14 +29,14 @@ import java.util.List;
  */
 public class CronValidator implements InternalConfigurationValidator<String, CronValidation> {
     private static final List<String> RESERVED_FORMATS = Arrays.asList(
-            "@reboot",
-            "@yearly",
-            "@annually",
-            "@monthly",
-            "@weekly",
-            "@daily",
-            "@midnight",
-            "@hourly"
+        "@reboot",
+        "@yearly",
+        "@annually",
+        "@monthly",
+        "@weekly",
+        "@daily",
+        "@midnight",
+        "@hourly"
     );
 
     @Override

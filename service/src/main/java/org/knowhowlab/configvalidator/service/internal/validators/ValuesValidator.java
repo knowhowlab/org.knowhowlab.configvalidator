@@ -42,29 +42,29 @@ public class ValuesValidator implements InternalConfigurationValidator<Object, V
         //noinspection ConstantConditions
         if (annotation != null && annotation.value() != null) {
             List<String> values = Arrays.stream(annotation.value())
-                    .map(Value::value)
-                    .filter(v -> v != null)
-                    .map(String::valueOf)
-                    .collect(Collectors.toList());
+                .map(Value::value)
+                .filter(v -> v != null)
+                .map(String::valueOf)
+                .collect(Collectors.toList());
             if (values.isEmpty()) {
                 return;
             }
             if (object.getClass().isArray()) {
                 List<String> invalidValues = Arrays.stream((Object[]) object)
-                        .map(String::valueOf)
-                        .filter(v -> !values.contains(v))
-                        .collect(Collectors.toList());
+                    .map(String::valueOf)
+                    .filter(v -> !values.contains(v))
+                    .collect(Collectors.toList());
                 if (!invalidValues.isEmpty()) {
                     throw new InvalidConfigurationException(name,
-                            format("contains values %s out of range %s",
-                                    Arrays.toString(invalidValues.toArray(new String[invalidValues.size()])),
-                                    Arrays.toString(values.toArray(new String[values.size()]))));
+                        format("contains values %s out of range %s",
+                            Arrays.toString(invalidValues.toArray(new String[invalidValues.size()])),
+                            Arrays.toString(values.toArray(new String[values.size()]))));
                 }
             } else {
                 if (!values.stream().anyMatch(v -> v.equals(valueOf(object)))) {
                     throw new InvalidConfigurationException(name,
-                            format("contains value '%s' out of range %s", object,
-                                    Arrays.toString(values.toArray(new String[values.size()]))));
+                        format("contains value '%s' out of range %s", object,
+                            Arrays.toString(values.toArray(new String[values.size()]))));
                 }
             }
         }

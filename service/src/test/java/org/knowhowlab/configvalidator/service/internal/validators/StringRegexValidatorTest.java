@@ -72,7 +72,7 @@ public class StringRegexValidatorTest {
         RegexValidation mock = mock(RegexValidation.class);
         when(mock.value()).thenReturn("[0..9]*");
         Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
-                .isThrownBy(() -> validator.validate("param.1", "abc", mock))
-                .withMessage("param.1 does not match regex [0..9]*");
+            .isThrownBy(() -> validator.validate("param.1", "abc", mock))
+            .withMessage("param.1 does not match regex [0..9]*");
     }
 }

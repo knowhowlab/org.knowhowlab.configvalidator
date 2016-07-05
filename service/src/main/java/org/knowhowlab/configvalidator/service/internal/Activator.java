@@ -31,9 +31,9 @@ public class Activator implements BundleActivator {
     @Override
     public void start(BundleContext bundleContext) throws Exception {
         serviceRegistration = bundleContext.registerService(
-                ConfigurationValidationService.class,
-                new SimpleConfigurationValidationService(),
-                null);
+            ConfigurationValidationService.class,
+            new SimpleConfigurationValidationService(),
+            null);
     }
 
     @Override

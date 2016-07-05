@@ -18,6 +18,7 @@
 package org.knowhowlab.configvalidator.service.internal.helpers;
 
 import org.knowhowlab.configvalidator.api.annotations.ConfigurationProperty;
+import org.knowhowlab.configvalidator.api.annotations.CustomValidation;
 import org.knowhowlab.configvalidator.api.annotations.NullValidation;
 
 /**
@@ -33,4 +34,8 @@ public interface MethodConfiguration1 {
 
     @NullValidation
     String method4();
+
+    @NullValidation
+    @CustomValidation(ErrorStringValidator.class)
+    String method5();
 }

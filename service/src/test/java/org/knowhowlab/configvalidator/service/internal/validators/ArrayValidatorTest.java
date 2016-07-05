@@ -107,7 +107,7 @@ public class ArrayValidatorTest {
         when(mock.length()).thenReturn(new Range[]{rangeMock1, valueMock2});
 
         Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
-                .isThrownBy(() -> validator.validate("param.1", new Object[0], mock))
-                .withMessage("param.1 array length '0' out of range [[1.0,2.0), [2.0,3.0]]");
+            .isThrownBy(() -> validator.validate("param.1", new Object[0], mock))
+            .withMessage("param.1 array length '0' out of range [[1.0,2.0), [2.0,3.0]]");
     }
 }

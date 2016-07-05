@@ -25,7 +25,9 @@ import org.knowhowlab.configvalidator.service.internal.validators.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Function;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toMap;
 import static org.knowhowlab.configvalidator.service.internal.validators.Priority.*;
@@ -59,7 +61,7 @@ public class SimpleConfigurationValidationService implements ConfigurationValida
         // get class name
         String configName = getConfigurationName(aCLass);
         // validate HIGHEST for class
-        errors.addAll(validate(configName, config, sort(filter(CLASS_VALIDATORS, HIGHEST))));
+        errors.addAll(validate(configName, config, sort(filter(CLASS_VALIDATORS, aCLass.getDeclaredAnnotations(), HIGHEST))));
         // go method by method and run validation
         Method[] methods = aCLass.getDeclaredMethods();
         if (methods != null) {
@@ -70,7 +72,8 @@ public class SimpleConfigurationValidationService implements ConfigurationValida
                     }
                     String propertyName = getPropertyName(method);
                     try {
-                        errors.addAll(validate(propertyName, method.invoke(config), sort(filter(METHOD_VALIDATORS))));
+                        errors.addAll(validate(propertyName, method.invoke(config),
+                            sort(filter(METHOD_VALIDATORS, method.getDeclaredAnnotations()))));
                     } catch (Exception e) {
                         e.printStackTrace(); // todo
                     }
@@ -78,47 +81,62 @@ public class SimpleConfigurationValidationService implements ConfigurationValida
             }
         }
         // validate <= HIGH for class
-        errors.addAll(validate(configName, config, filter(CLASS_VALIDATORS, HIGH, MEDIUM, LOW, LOWEST)));
+        errors.addAll(validate(configName, config, filter(CLASS_VALIDATORS, aCLass.getDeclaredAnnotations(),
+            HIGH, MEDIUM, LOW, LOWEST)));
 
         if (!errors.isEmpty()) {
             throw new InvalidConfigurationException(errors);
         }
     }
 
-    static Map<Class, InternalConfigurationValidator> filter(Map<Class, InternalConfigurationValidator> validators,
-                                                             Priority... prios) {
+    static Map<Annotation, InternalConfigurationValidator> filter(Map<Class, InternalConfigurationValidator> validators,
+                                                                  Annotation[] annotations, Priority... prios) {
+        Map<Class, InternalConfigurationValidator> map;
         if (prios.length == 0) {
-            return validators;
+            map = validators;
         } else {
             Set<Priority> set = new HashSet<>(asList(prios));
-            return validators.entrySet().stream()
-                    .filter(v -> set.contains(v.getValue().getPriorityOrder()))
-                    .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
+            map = validators.entrySet().stream()
+                .filter(v -> set.contains(v.getValue().getPriorityOrder()))
+                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
         }
+        return Arrays.stream(annotations).
+            filter(v -> map.containsKey(v.annotationType()))
+            .collect(toMap(Function.identity(), v -> map.get(v.annotationType())));
     }
 
-    static LinkedHashMap<Class, InternalConfigurationValidator> sort(Map<Class, InternalConfigurationValidator> validators) {
+    static LinkedHashMap<Annotation, InternalConfigurationValidator> sort(
+        Map<Annotation, InternalConfigurationValidator> validators) {
         return validators.entrySet().stream()
-                .sorted(Comparator.comparing(v -> v.getValue().getPriorityOrder().getPriority()))
-                .collect(toMap(Map.Entry::getKey, Map.Entry::getValue,
-                        (u, v) -> {
-                            throw new IllegalStateException(String.format("Duplicate key %s", u));
-                        },
-                        LinkedHashMap::new));
+            .sorted(Comparator.comparing(v -> v.getValue().getPriorityOrder().getPriority()))
+            .collect(toMap(
+                Map.Entry::getKey,
+                Map.Entry::getValue,
+                (u, v) -> {
+                    throw new IllegalStateException(format("Duplicate key %s", u));
+                },
+                LinkedHashMap::new));
     }
 
     private <T> Collection<InvalidConfigurationException> validate(String name,
                                                                    T value,
-                                                                   Map<Class, InternalConfigurationValidator> validators) {
+                                                                   Map<Annotation, InternalConfigurationValidator> validators) {
         List<InvalidConfigurationException> errors = new ArrayList<>();
-        // todo
+        for (Map.Entry<Annotation, InternalConfigurationValidator> entry : validators.entrySet()) {
+            try {
+                //noinspection unchecked
+                entry.getValue().validate(name, value, entry.getKey());
+            } catch (InvalidConfigurationException e) {
+                errors.add(e);
+            }
+        }
         return errors;
     }
 
     static String getPropertyName(Method method) {
         ConfigurationProperty annotation = method.getAnnotation(ConfigurationProperty.class);
         if (annotation == null) {
-            return method.getName(); // todo: osgi names
+            return method.getName(); // todo: osgi names, getters
         } else {
             return annotation.value();
         }
@@ -126,8 +144,8 @@ public class SimpleConfigurationValidationService implements ConfigurationValida
 
     static boolean isConfigProperty(Method method) {
         return Arrays.stream(method.getDeclaredAnnotations())
-                .map(Annotation::annotationType)
-                .anyMatch(v -> METHOD_VALIDATORS.keySet().contains(v));
+            .map(Annotation::annotationType)
+            .anyMatch(v -> METHOD_VALIDATORS.keySet().contains(v));
     }
 
     static <T> String getConfigurationName(Class<T> aCLass) {

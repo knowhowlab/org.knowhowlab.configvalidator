@@ -29,12 +29,12 @@ public class InvalidConfigurationExceptionTest {
     @Test
     public void one_property() throws Exception {
         Assert.assertThat(new InvalidConfigurationException("param.1", "is invalid").getMessage(),
-                equalTo("param.1 is invalid"));
+            equalTo("param.1 is invalid"));
     }
 
     @Test
     public void property_name_null() throws Exception {
         Assert.assertThat(new InvalidConfigurationException(null, "is invalid").getMessage(),
-                equalTo("unknown is invalid"));
+            equalTo("unknown is invalid"));
     }
 }

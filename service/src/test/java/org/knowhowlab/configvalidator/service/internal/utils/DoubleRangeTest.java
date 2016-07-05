@@ -46,7 +46,8 @@ public class DoubleRangeTest {
 
         range = valueOf("(1,2)");
         assertThat(range, notNullValue());
-        assertThat(range.getMinimum(), is(1.));assertThat(range.getMaximum(), is(2.));
+        assertThat(range.getMinimum(), is(1.));
+        assertThat(range.getMaximum(), is(2.));
         assertThat(range.isMinimumIncluded(), is(false));
         assertThat(range.isMaximumIncluded(), is(false));
 

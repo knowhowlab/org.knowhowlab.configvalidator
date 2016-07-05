@@ -42,40 +42,40 @@ public class NumbersRangeValidator implements InternalConfigurationValidator<Obj
         //noinspection ConstantConditions
         if (annotation != null && annotation.value() != null) {
             List<DoubleRange> ranges = Arrays.stream(annotation.value())
-                    .map(Range::value)
-                    .filter(v -> v != null)
-                    .map(DoubleRange::valueOf)
-                    .filter(DoubleRange::isValid)
-                    .collect(Collectors.toList());
+                .map(Range::value)
+                .filter(v -> v != null)
+                .map(DoubleRange::valueOf)
+                .filter(DoubleRange::isValid)
+                .collect(Collectors.toList());
             if (ranges.isEmpty()) {
                 return;
             }
             if (object.getClass().isArray()) {
                 List<Object> invalidValues = Arrays.stream((Object[]) object)
-                        .filter(v -> !(v instanceof Number))
-                        .collect(Collectors.toList());
+                    .filter(v -> !(v instanceof Number))
+                    .collect(Collectors.toList());
                 List<Object> outOfRangeValues = Arrays.stream((Object[]) object)
-                        .filter(v -> v instanceof Number)
-                        .map(v -> (Number)v)
-                        .filter(v -> ranges.stream().noneMatch(s -> s.contains(v)))
-                        .collect(Collectors.toList());
+                    .filter(v -> v instanceof Number)
+                    .map(v -> (Number) v)
+                    .filter(v -> ranges.stream().noneMatch(s -> s.contains(v)))
+                    .collect(Collectors.toList());
 
                 if (!invalidValues.isEmpty() || !outOfRangeValues.isEmpty()) {
                     invalidValues.addAll(outOfRangeValues);
                     throw new InvalidConfigurationException(name,
-                            format("contains %s invalid or out of range %s values",
-                                    Arrays.toString(invalidValues.toArray(new Object[invalidValues.size()])),
-                                    Arrays.toString(ranges.toArray(new DoubleRange[ranges.size()]))));
+                        format("contains %s invalid or out of range %s values",
+                            Arrays.toString(invalidValues.toArray(new Object[invalidValues.size()])),
+                            Arrays.toString(ranges.toArray(new DoubleRange[ranges.size()]))));
                 }
             } else {
                 if (!(object instanceof Number)) {
                     throw new InvalidConfigurationException(name,
-                            format("is not a number '%s'", object));
+                        format("is not a number '%s'", object));
                 }
-                if (!ranges.stream().anyMatch(v -> v.contains((Number)object))) {
+                if (!ranges.stream().anyMatch(v -> v.contains((Number) object))) {
                     throw new InvalidConfigurationException(name,
-                            format("contains value '%s' out of range %s", object,
-                                    Arrays.toString(ranges.toArray(new DoubleRange[ranges.size()]))));
+                        format("contains value '%s' out of range %s", object,
+                            Arrays.toString(ranges.toArray(new DoubleRange[ranges.size()]))));
                 }
             }
         }

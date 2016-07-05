@@ -237,8 +237,8 @@ public class ValuesValidatorTest {
         when(mock.value()).thenReturn(new Value[]{valueMock1, valueMock2});
 
         Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
-                .isThrownBy(() -> validator.validate("param.1", "c", mock))
-                .withMessage("param.1 contains value 'c' out of range [a, b]");
+            .isThrownBy(() -> validator.validate("param.1", "c", mock))
+            .withMessage("param.1 contains value 'c' out of range [a, b]");
     }
 
     @Test
@@ -251,8 +251,8 @@ public class ValuesValidatorTest {
         when(mock.value()).thenReturn(new Value[]{valueMock1, valueMock2});
 
         Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
-                .isThrownBy(() -> validator.validate("param.1", TestEnum.NOKNOK, mock))
-                .withMessage("param.1 contains value 'NOKNOK' out of range [OK, NOK]");
+            .isThrownBy(() -> validator.validate("param.1", TestEnum.NOKNOK, mock))
+            .withMessage("param.1 contains value 'NOKNOK' out of range [OK, NOK]");
     }
 
     @Test
@@ -265,8 +265,8 @@ public class ValuesValidatorTest {
         when(mock.value()).thenReturn(new Value[]{valueMock1, valueMock2});
 
         Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
-                .isThrownBy(() -> validator.validate("param.1", new String[]{"a", "c"}, mock))
-                .withMessage("param.1 contains values [c] out of range [a, b]");
+            .isThrownBy(() -> validator.validate("param.1", new String[]{"a", "c"}, mock))
+            .withMessage("param.1 contains values [c] out of range [a, b]");
     }
 
     @Test
@@ -279,7 +279,7 @@ public class ValuesValidatorTest {
         when(mock.value()).thenReturn(new Value[]{valueMock1, valueMock2});
 
         Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
-                .isThrownBy(() -> validator.validate("param.1", new TestEnum[]{TestEnum.OK, TestEnum.NOKNOK}, mock))
-                .withMessage("param.1 contains values [NOKNOK] out of range [OK, NOK]");
+            .isThrownBy(() -> validator.validate("param.1", new TestEnum[]{TestEnum.OK, TestEnum.NOKNOK}, mock))
+            .withMessage("param.1 contains values [NOKNOK] out of range [OK, NOK]");
     }
 }

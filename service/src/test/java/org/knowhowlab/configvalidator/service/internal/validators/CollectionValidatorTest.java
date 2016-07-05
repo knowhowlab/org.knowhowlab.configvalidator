@@ -108,7 +108,7 @@ public class CollectionValidatorTest {
         when(mock.size()).thenReturn(new Range[]{rangeMock1, valueMock2});
 
         Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
-                .isThrownBy(() -> validator.validate("param.1", emptyList(), mock))
-                .withMessage("param.1 collection size '0' out of range [[1.0,2.0), [2.0,3.0]]");
+            .isThrownBy(() -> validator.validate("param.1", emptyList(), mock))
+            .withMessage("param.1 collection size '0' out of range [[1.0,2.0), [2.0,3.0]]");
     }
 }

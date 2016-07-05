@@ -49,14 +49,14 @@ public class NullValueValidatorTest {
     @Test
     public void null_value() throws Exception {
         Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
-                .isThrownBy(() -> validator.validate("param.1", null, mock(NullValidation.class)))
-        .withMessage("param.1 is null");
+            .isThrownBy(() -> validator.validate("param.1", null, mock(NullValidation.class)))
+            .withMessage("param.1 is null");
     }
 
     @Test
     public void null_value_and_null_annotation() throws Exception {
         Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
-                .isThrownBy(() -> validator.validate("param.1", null, null))
-        .withMessage("param.1 is null");
+            .isThrownBy(() -> validator.validate("param.1", null, null))
+            .withMessage("param.1 is null");
     }
 }

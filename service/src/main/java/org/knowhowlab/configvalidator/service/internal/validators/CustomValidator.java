@@ -71,10 +71,10 @@ public class CustomValidator implements InternalConfigurationValidator<Object, C
                         errors.add(e);
                     }
                 } catch (NoSuchMethodException
-                        | InstantiationException
-                        | ClassCastException
-                        | InvocationTargetException
-                        | IllegalAccessException e) {
+                    | InstantiationException
+                    | ClassCastException
+                    | InvocationTargetException
+                    | IllegalAccessException e) {
                     LOG.warn("Unable to use custom configuration validator. It's ignored", e);
                 }
             }

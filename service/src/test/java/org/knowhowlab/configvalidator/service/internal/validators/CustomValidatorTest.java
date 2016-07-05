@@ -74,7 +74,7 @@ public class CustomValidatorTest {
         when(mock.value()).thenReturn(new Class[]{ErrorStringValidator.class});
 
         Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
-                .isThrownBy(() -> validator.validate("param.1", "errorString", mock))
-                .withMessage("param.1 starts with error");
+            .isThrownBy(() -> validator.validate("param.1", "errorString", mock))
+            .withMessage("param.1 starts with error");
     }
 }

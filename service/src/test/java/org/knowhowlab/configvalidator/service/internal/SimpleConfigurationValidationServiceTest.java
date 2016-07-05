@@ -29,6 +29,7 @@ import org.knowhowlab.configvalidator.service.internal.validators.FilterValidato
 import org.knowhowlab.configvalidator.service.internal.validators.InternalConfigurationValidator;
 import org.knowhowlab.configvalidator.service.internal.validators.NullValueValidator;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -36,12 +37,11 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.stream.Collectors.toList;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.knowhowlab.configvalidator.service.internal.SimpleConfigurationValidationService.*;
 import static org.knowhowlab.configvalidator.service.internal.validators.Priority.HIGHEST;
+import static org.mockito.Mockito.mock;
 
 /**
  * @author dpishchukhin
@@ -78,46 +78,64 @@ public class SimpleConfigurationValidationServiceTest {
     @Test
     public void testFilter_noFilter() throws Exception {
         Map<Class, InternalConfigurationValidator> validators = new HashMap<>();
-        validators.put(NullValueValidator.class, new NullValueValidator());
-        validators.put(CustomValidator.class, new CustomValidator());
+        validators.put(NullValidation.class, new NullValueValidator());
+        validators.put(CustomValidation.class, new CustomValidator());
 
-        Map<Class, InternalConfigurationValidator> map = filter(validators);
+        Map<Annotation, InternalConfigurationValidator> map = filter(validators, new Annotation[0]);
         assertThat(map, notNullValue());
-        assertThat(map.size(), is(2));
-        assertThat(map.containsKey(NullValueValidator.class), is(true));
-        assertThat(map.containsKey(CustomValidator.class), is(true));
+        assertThat(map.size(), is(0));
     }
 
     @Test
-    public void testFilter_filter() throws Exception {
+    public void testFilter_filter_annotations() throws Exception {
         Map<Class, InternalConfigurationValidator> validators = new HashMap<>();
-        validators.put(NullValueValidator.class, new NullValueValidator());
-        validators.put(CustomValidator.class, new CustomValidator());
+        NullValueValidator nullValueValidator = new NullValueValidator();
+        validators.put(NullValidation.class, nullValueValidator);
+        validators.put(CustomValidation.class, new CustomValidator());
 
-        Map<Class, InternalConfigurationValidator> map = filter(validators, HIGHEST);
+        Map<Annotation, InternalConfigurationValidator> map = filter(validators,
+            MethodConfiguration1.class.getDeclaredMethod("method4").getDeclaredAnnotations());
         assertThat(map, notNullValue());
         assertThat(map.size(), is(1));
-        assertThat(map.containsKey(NullValueValidator.class), is(true));
+        assertThat(map.containsValue(nullValueValidator), is(true));
+    }
+
+    @Test
+    public void testFilter_filter_prio() throws Exception {
+        Map<Class, InternalConfigurationValidator> validators = new HashMap<>();
+        NullValueValidator nullValueValidator = new NullValueValidator();
+        validators.put(NullValidation.class, nullValueValidator);
+        validators.put(CustomValidation.class, new CustomValidator());
+
+        Map<Annotation, InternalConfigurationValidator> map = filter(validators,
+            MethodConfiguration1.class.getDeclaredMethod("method5").getDeclaredAnnotations(), HIGHEST);
+        assertThat(map, notNullValue());
+        assertThat(map.size(), is(1));
+        assertThat(map.containsValue(nullValueValidator), is(true));
     }
 
     @Test
     public void testSort() throws Exception {
-        Map<Class, InternalConfigurationValidator> validators = new HashMap<>();
-        validators.put(CustomValidation.class, new CustomValidator());
-        validators.put(FilterValidation.class, new FilterValidator());
-        validators.put(NullValidation.class, new NullValueValidator());
+        NullValidation nullValidation = mock(NullValidation.class);
+        CustomValidation customValidation = mock(CustomValidation.class);
+        FilterValidation filterValidation = mock(FilterValidation.class);
 
-        LinkedHashMap<Class, InternalConfigurationValidator> map = sort(validators);
+        Map<Annotation, InternalConfigurationValidator> validators = new HashMap<>();
+        validators.put(customValidation, new CustomValidator());
+        validators.put(filterValidation, new FilterValidator());
+        validators.put(nullValidation, new NullValueValidator());
+
+        LinkedHashMap<Annotation, InternalConfigurationValidator> map = sort(validators);
         assertThat(map, notNullValue());
         assertThat(map.size(), is(3));
-        assertThat(map.containsKey(NullValidation.class), is(true));
-        assertThat(map.containsKey(FilterValidation.class), is(true));
-        assertThat(map.containsKey(CustomValidation.class), is(true));
+        assertThat(map.containsKey(nullValidation), is(true));
+        assertThat(map.containsKey(filterValidation), is(true));
+        assertThat(map.containsKey(customValidation), is(true));
 
-        List<Class> list = map.keySet().stream().collect(toList());
-        assertThat(list.get(0), equalTo(NullValidation.class));
-        assertThat(list.get(1), equalTo(FilterValidation.class));
-        assertThat(list.get(2), equalTo(CustomValidation.class));
+        List<Annotation> list = map.keySet().stream().collect(toList());
+        assertThat(list.get(0), equalTo(nullValidation));
+        assertThat(list.get(1), equalTo(filterValidation));
+        assertThat(list.get(2), equalTo(customValidation));
     }
 
     @Test

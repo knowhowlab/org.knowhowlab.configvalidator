@@ -138,8 +138,8 @@ public class NumbersRangeValidatorTest {
         when(mock.value()).thenReturn(new Range[]{rangeMock1, valueMock2});
 
         Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
-                .isThrownBy(() -> validator.validate("param.1", 1, mock))
-                .withMessage("param.1 contains value '1' out of range [[0.0,0.0], [2.0,3.0]]");
+            .isThrownBy(() -> validator.validate("param.1", 1, mock))
+            .withMessage("param.1 contains value '1' out of range [[0.0,0.0], [2.0,3.0]]");
     }
 
     @Test
@@ -152,8 +152,8 @@ public class NumbersRangeValidatorTest {
         when(mock.value()).thenReturn(new Range[]{rangeMock1, valueMock2});
 
         Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
-                .isThrownBy(() -> validator.validate("param.1", "1", mock))
-                .withMessage("param.1 is not a number '1'");
+            .isThrownBy(() -> validator.validate("param.1", "1", mock))
+            .withMessage("param.1 is not a number '1'");
     }
 
     @Test
@@ -166,8 +166,8 @@ public class NumbersRangeValidatorTest {
         when(mock.value()).thenReturn(new Range[]{rangeMock1, valueMock2});
 
         Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
-                .isThrownBy(() -> validator.validate("param.1", new Number[]{0.5, 1, 2}, mock))
-                .withMessage("param.1 contains [0.5, 1] invalid or out of range [[0.0,0.0], [2.0,3.0]] values");
+            .isThrownBy(() -> validator.validate("param.1", new Number[]{0.5, 1, 2}, mock))
+            .withMessage("param.1 contains [0.5, 1] invalid or out of range [[0.0,0.0], [2.0,3.0]] values");
     }
 
     @Test
@@ -180,7 +180,7 @@ public class NumbersRangeValidatorTest {
         when(mock.value()).thenReturn(new Range[]{rangeMock1, valueMock2});
 
         Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
-                .isThrownBy(() -> validator.validate("param.1", new Object[]{"a", 2}, mock))
-                .withMessage("param.1 contains [a] invalid or out of range [[0.0,0.0], [2.0,3.0]] values");
+            .isThrownBy(() -> validator.validate("param.1", new Object[]{"a", 2}, mock))
+            .withMessage("param.1 contains [a] invalid or out of range [[0.0,0.0], [2.0,3.0]] values");
     }
 }

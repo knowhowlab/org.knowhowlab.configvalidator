@@ -42,18 +42,18 @@ public class ArrayValidator implements InternalConfigurationValidator<Object[], 
         //noinspection ConstantConditions
         if (annotation != null && annotation.length() != null) {
             List<DoubleRange> ranges = Arrays.stream(annotation.length())
-                    .map(Range::value)
-                    .filter(v -> v != null)
-                    .map(DoubleRange::valueOf)
-                    .filter(DoubleRange::isValid)
-                    .collect(Collectors.toList());
+                .map(Range::value)
+                .filter(v -> v != null)
+                .map(DoubleRange::valueOf)
+                .filter(DoubleRange::isValid)
+                .collect(Collectors.toList());
             if (ranges.isEmpty()) {
                 return;
             }
             if (!ranges.stream().anyMatch(v -> v.contains(array.length))) {
                 throw new InvalidConfigurationException(name,
-                        format("array length '%s' out of range %s", array.length,
-                                Arrays.toString(ranges.toArray(new DoubleRange[ranges.size()]))));
+                    format("array length '%s' out of range %s", array.length,
+                        Arrays.toString(ranges.toArray(new DoubleRange[ranges.size()]))));
             }
         }
     }

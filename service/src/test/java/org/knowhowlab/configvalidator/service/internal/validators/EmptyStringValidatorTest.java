@@ -49,14 +49,14 @@ public class EmptyStringValidatorTest {
     @Test
     public void empty_value() throws Exception {
         Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
-                .isThrownBy(() -> validator.validate("param.1", "", mock(EmptyStringValidation.class)))
-                .withMessage("param.1 is empty");
+            .isThrownBy(() -> validator.validate("param.1", "", mock(EmptyStringValidation.class)))
+            .withMessage("param.1 is empty");
     }
 
     @Test
     public void empty_value_and_null_annotation() throws Exception {
         Assertions.assertThatExceptionOfType(InvalidConfigurationException.class)
-                .isThrownBy(() -> validator.validate("param.1", "", null))
-                .withMessage("param.1 is empty");
+            .isThrownBy(() -> validator.validate("param.1", "", null))
+            .withMessage("param.1 is empty");
     }
 }

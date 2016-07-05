@@ -33,8 +33,8 @@ public class InvalidConfigurationException extends IllegalArgumentException {
 
     public InvalidConfigurationException(Collection<InvalidConfigurationException> errors) {
         super(errors.stream()
-                .map(Exception::getMessage)
-                .collect(joining(", "))
+            .map(Exception::getMessage)
+            .collect(joining(", "))
         );
     }
 

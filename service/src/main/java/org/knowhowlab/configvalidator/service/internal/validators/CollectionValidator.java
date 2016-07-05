@@ -43,18 +43,18 @@ public class CollectionValidator implements InternalConfigurationValidator<Colle
         //noinspection ConstantConditions
         if (annotation != null && annotation.size() != null) {
             List<DoubleRange> ranges = Arrays.stream(annotation.size())
-                    .map(Range::value)
-                    .filter(v -> v != null)
-                    .map(DoubleRange::valueOf)
-                    .filter(DoubleRange::isValid)
-                    .collect(Collectors.toList());
+                .map(Range::value)
+                .filter(v -> v != null)
+                .map(DoubleRange::valueOf)
+                .filter(DoubleRange::isValid)
+                .collect(Collectors.toList());
             if (ranges.isEmpty()) {
                 return;
             }
             if (!ranges.stream().anyMatch(v -> v.contains(collection.size()))) {
                 throw new InvalidConfigurationException(name,
-                        format("collection size '%s' out of range %s", collection.size(),
-                                Arrays.toString(ranges.toArray(new DoubleRange[ranges.size()]))));
+                    format("collection size '%s' out of range %s", collection.size(),
+                        Arrays.toString(ranges.toArray(new DoubleRange[ranges.size()]))));
             }
         }
     }
